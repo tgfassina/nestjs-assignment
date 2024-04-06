@@ -8,6 +8,10 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
+  findByUsername(username: string): Promise<User> {
+    return this.usersRepository.findOneBy({ username });
+  }
+
   register(username: string, password: string): Promise<User> {
     const user = this.usersRepository.create({
       username,
