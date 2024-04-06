@@ -29,7 +29,7 @@ export class CatsService {
   }
 
   async update(uuid: string, payload: UpdateCatDto) {
-    if (Object.keys(payload).length > 1) {
+    if (Object.keys(payload).length > 0) {
       await this.catsRepository.update({ uuid }, payload);
     }
     return this.catsRepository.findOneBy({ uuid });
