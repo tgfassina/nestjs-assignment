@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Param,
@@ -7,31 +6,27 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { Roles } from "../common/decorators/roles.decorator";
-import { RolesGuard } from "../common/guards/roles.guard";
 import { CatsService } from "./cats.service";
-import { CreateCatDto } from "./dto/create-cat.dto";
 import { ICat } from "./interfaces/cat.interface";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { IsAdminGuard } from "src/auth/guards/is-admin.guard";
 
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard)
 @Controller("cats")
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
+  @UseGuards(IsAdminGuard)
   @Post()
-  @Roles(["admin"])
-  async create(@Body() createCatDto: CreateCatDto) {
-    this.catsService.create(createCatDto);
+  async create() {
+    return { create: "ok" };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(): Promise<ICat[]> {
     return this.catsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":uuid")
   async findOne(
     @Param("uuid", new ParseUUIDPipe())
