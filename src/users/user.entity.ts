@@ -22,6 +22,6 @@ export class User {
   isAdmin: boolean;
 
   @ManyToMany(() => Cat)
-  @JoinTable({name: "favorite_cats"})
+  @JoinTable({ name: "favorite_cats" })
   favoriteCats: Cat[];
 }

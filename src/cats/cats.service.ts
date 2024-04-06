@@ -42,11 +42,15 @@ export class CatsService {
   }
 
   async addFavorite(uuid: string, userUuid: string): Promise<boolean> {
-    const cat = await this.catsRepository.findOneBy({ uuid });
     const user = await this.usersRepository.findOne({
       where: { uuid: userUuid },
       relations: ["favoriteCats"],
     });
+    if (user.favoriteCats.find((cat) => cat.uuid === uuid)) return false;
+
+    const cat = await this.catsRepository.findOneBy({ uuid });
+    if (!cat) return false;
+
     user.favoriteCats.push(cat);
     await this.usersRepository.save(user);
     return true;
@@ -57,6 +61,8 @@ export class CatsService {
       where: { uuid: userUuid },
       relations: ["favoriteCats"],
     });
+    if (!user.favoriteCats.find((cat) => cat.uuid === uuid)) return false;
+
     user.favoriteCats = user.favoriteCats.filter((cat) => cat.uuid !== uuid);
     await this.usersRepository.save(user);
     return true;
