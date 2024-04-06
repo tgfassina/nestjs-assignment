@@ -1,10 +1,18 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import { Roles } from "../common/decorators/roles.decorator";
 import { RolesGuard } from "../common/guards/roles.guard";
-import { ParseIntPipe } from "../common/pipes/parse-int.pipe";
 import { CatsService } from "./cats.service";
 import { CreateCatDto } from "./dto/create-cat.dto";
 import { ICat } from "./interfaces/cat.interface";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
 @UseGuards(RolesGuard)
 @Controller("cats")
@@ -17,16 +25,18 @@ export class CatsController {
     this.catsService.create(createCatDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(): Promise<ICat[]> {
     return this.catsService.findAll();
   }
 
-  @Get(":id")
-  findOne(
-    @Param("id", new ParseIntPipe())
-    id: number,
+  @UseGuards(JwtAuthGuard)
+  @Get(":uuid")
+  async findOne(
+    @Param("uuid", new ParseUUIDPipe())
+    uuid: string,
   ) {
-    // get by ID logic
+    return this.catsService.findByUuid(uuid);
   }
 }

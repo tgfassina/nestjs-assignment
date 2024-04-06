@@ -20,4 +20,8 @@ export class CatsService {
   findAll(): Promise<Cat[]> {
     return this.catsRepository.find();
   }
+
+  findByUuid(uuid: string): Promise<Cat> {
+    return this.catsRepository.findOneBy({ uuid });
+  }
 }
