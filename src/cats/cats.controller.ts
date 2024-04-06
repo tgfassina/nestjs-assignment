@@ -14,6 +14,7 @@ import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { IsAdminGuard } from "src/auth/guards/is-admin.guard";
 import { Cat } from "./cat.entity";
 import { CreateCatDto } from "./dto/create-cat.dto";
+import { UpdateCatDto } from "./dto/update-cat.dto";
 
 @UseGuards(JwtAuthGuard)
 @Controller("cats")
@@ -43,7 +44,7 @@ export class CatsController {
   @Put(":uuid")
   update(
     @Param("uuid", new ParseUUIDPipe()) uuid: string,
-    @Body() payload: CreateCatDto,
+    @Body() payload: UpdateCatDto,
   ): Promise<any> {
     return this.catsService.update(uuid, payload);
   }

@@ -3,6 +3,7 @@ import { Repository } from "typeorm";
 import { Cat } from "./cat.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateCatDto } from "./dto/create-cat.dto";
+import { UpdateCatDto } from "./dto/update-cat.dto";
 
 @Injectable()
 export class CatsService {
@@ -24,8 +25,10 @@ export class CatsService {
     return this.catsRepository.findOneBy({ uuid });
   }
 
-  async update(uuid: string, payload: CreateCatDto) {
-    await this.catsRepository.update({ uuid }, payload);
+  async update(uuid: string, payload: UpdateCatDto) {
+    if (Object.keys(payload).length > 1) {
+      await this.catsRepository.update({ uuid }, payload);
+    }
     return this.catsRepository.findOneBy({ uuid });
   }
 
