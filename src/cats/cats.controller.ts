@@ -34,7 +34,7 @@ export class CatsController {
 
   @Get(":uuid")
   findOne(
-    @Param("uuid", new ParseUUIDPipe())
+    @Param("uuid", ParseUUIDPipe)
     uuid: string,
   ): Promise<Cat> {
     return this.catsService.findByUuid(uuid);
@@ -43,7 +43,7 @@ export class CatsController {
   @UseGuards(IsAdminGuard)
   @Put(":uuid")
   update(
-    @Param("uuid", new ParseUUIDPipe()) uuid: string,
+    @Param("uuid", ParseUUIDPipe) uuid: string,
     @Body() payload: UpdateCatDto,
   ): Promise<any> {
     return this.catsService.update(uuid, payload);
@@ -51,7 +51,7 @@ export class CatsController {
 
   @UseGuards(IsAdminGuard)
   @Delete(":uuid")
-  delete(@Param("uuid", new ParseUUIDPipe()) uuid: string): Promise<boolean> {
+  delete(@Param("uuid", ParseUUIDPipe) uuid: string): Promise<boolean> {
     return this.catsService.delete(uuid);
   }
 }

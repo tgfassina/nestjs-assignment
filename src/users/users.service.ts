@@ -1,5 +1,6 @@
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { RegisterDto } from "src/auth/dto/register.dto";
 import { Repository } from "typeorm";
 
 export class UsersService {
@@ -12,10 +13,10 @@ export class UsersService {
     return this.usersRepository.findOneBy({ username });
   }
 
-  register(username: string, password: string): Promise<User> {
+  register(payload: RegisterDto): Promise<User> {
     const user = this.usersRepository.create({
-      username,
-      password,
+      username: payload.username,
+      password: payload.password,
       isAdmin: false,
     });
     return this.usersRepository.save(user);

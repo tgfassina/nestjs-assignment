@@ -11,6 +11,7 @@ import { AuthService } from "./auth.service";
 import { ISessionUser } from "./interfaces/session-user.interface";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { UsersService } from "src/users/users.service";
+import { RegisterDto } from "./dto/register.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -22,9 +23,9 @@ export class AuthController {
   @Post("register")
   register(
     @Body()
-    { username, password }: { username: string; password: string },
+    payload: RegisterDto,
   ) {
-    return this.usersService.register(username, password);
+    return this.usersService.register(payload);
   }
 
   @UseGuards(LocalAuthGuard)
