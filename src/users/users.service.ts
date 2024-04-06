@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RegisterDto } from "src/auth/dto/register.dto";
@@ -16,7 +17,13 @@ export class UsersService {
     });
   }
 
-  register(payload: RegisterDto): Promise<User> {
+  async register(payload: RegisterDto): Promise<User> {
+    const existingUser = await this.usersRepository.findOneBy({
+      username: payload.username,
+    });
+    if (existingUser)
+      throw new BadRequestException("username is already taken");
+
     const user = this.usersRepository.create({
       username: payload.username,
       password: payload.password,

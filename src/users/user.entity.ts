@@ -12,7 +12,7 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   uuid: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
