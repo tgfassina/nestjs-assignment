@@ -1,4 +1,5 @@
-import { BadRequestException } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
+import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RegisterDto } from "src/auth/dto/register.dto";
@@ -17,6 +18,18 @@ export class UsersService {
     });
   }
 
+  async findProfile(username: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { username },
+      relations: ["favoriteCats"],
+    });
+
+    if (!user) throw new NotFoundException("profile not found");
+
+    delete user.password;
+    return user;
+  }
+
   async register(payload: RegisterDto): Promise<User> {
     const existingUser = await this.usersRepository.findOneBy({
       username: payload.username,
@@ -24,11 +37,15 @@ export class UsersService {
     if (existingUser)
       throw new BadRequestException("username is already taken");
 
+    const password = await bcrypt.hash(payload.password, 0);
     const user = this.usersRepository.create({
       username: payload.username,
-      password: payload.password,
+      password: password,
       isAdmin: false,
     });
-    return this.usersRepository.save(user);
+
+    const newUser = await this.usersRepository.save(user);
+    delete newUser.password;
+    return newUser;
   }
 }

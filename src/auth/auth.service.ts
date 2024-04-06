@@ -1,3 +1,4 @@
+import * as bcrypt from "bcrypt";
 import { Injectable } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import { ISessionUser } from "./interfaces/session-user.interface";
@@ -15,12 +16,14 @@ export class AuthService {
     password: string,
   ): Promise<ISessionUser | null> {
     const user = await this.usersService.findByUsername(username);
-    if (user && user.password === password) {
-      const { ...result } = user;
-      delete user.password;
-      return result;
-    }
-    return null;
+    if (!user) return null;
+
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) return null;
+
+    const { ...result } = user;
+    delete user.password;
+    return result;
   }
 
   login(user: ISessionUser) {

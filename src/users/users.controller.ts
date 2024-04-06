@@ -7,6 +7,6 @@ export class UsersController {
 
   @Get(":username")
   profile(@Param("username") username: string) {
-    return this.usersService.findByUsername(username);
+    return this.usersService.findProfile(username);
   }
 }
