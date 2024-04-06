@@ -29,13 +29,13 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post("login")
-  async login(@Request() req: { user: ISessionUser }) {
+  login(@Request() req: { user: ISessionUser }) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
-  async me(@Request() req: { user: ISessionUser }) {
+  me(@Request() req: { user: ISessionUser }) {
     return req.user;
   }
 }

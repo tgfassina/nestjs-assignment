@@ -21,17 +21,17 @@ export class CatsController {
 
   @UseGuards(IsAdminGuard)
   @Post()
-  async create(@Body() payload: CreateCatDto): Promise<Cat> {
+  create(@Body() payload: CreateCatDto): Promise<Cat> {
     return this.catsService.create(payload);
   }
 
   @Get()
-  async findAll(): Promise<Cat[]> {
+  findAll(): Promise<Cat[]> {
     return this.catsService.findAll();
   }
 
   @Get(":uuid")
-  async findOne(
+  findOne(
     @Param("uuid", new ParseUUIDPipe())
     uuid: string,
   ): Promise<Cat> {
@@ -40,9 +40,7 @@ export class CatsController {
 
   @UseGuards(IsAdminGuard)
   @Delete(":uuid")
-  async delete(
-    @Param("uuid", new ParseUUIDPipe()) uuid: string,
-  ): Promise<boolean> {
+  delete(@Param("uuid", new ParseUUIDPipe()) uuid: string): Promise<boolean> {
     return this.catsService.delete(uuid);
   }
 }
