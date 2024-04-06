@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   UseGuards,
 } from "@nestjs/common";
 import { CatsService } from "./cats.service";
@@ -36,6 +37,15 @@ export class CatsController {
     uuid: string,
   ): Promise<Cat> {
     return this.catsService.findByUuid(uuid);
+  }
+
+  @UseGuards(IsAdminGuard)
+  @Put(":uuid")
+  update(
+    @Param("uuid", new ParseUUIDPipe()) uuid: string,
+    @Body() payload: CreateCatDto,
+  ): Promise<any> {
+    return this.catsService.update(uuid, payload);
   }
 
   @UseGuards(IsAdminGuard)

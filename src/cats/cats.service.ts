@@ -24,6 +24,11 @@ export class CatsService {
     return this.catsRepository.findOneBy({ uuid });
   }
 
+  async update(uuid: string, payload: CreateCatDto) {
+    await this.catsRepository.update({ uuid }, payload);
+    return this.catsRepository.findOneBy({ uuid });
+  }
+
   async delete(uuid: string): Promise<boolean> {
     return this.catsRepository
       .delete({ uuid })
