@@ -4,7 +4,7 @@ import { RolesGuard } from "../common/guards/roles.guard";
 import { ParseIntPipe } from "../common/pipes/parse-int.pipe";
 import { CatsService } from "./cats.service";
 import { CreateCatDto } from "./dto/create-cat.dto";
-import { Cat } from "./interfaces/cat.interface";
+import { ICat } from "./interfaces/cat.interface";
 
 @UseGuards(RolesGuard)
 @Controller("cats")
@@ -18,7 +18,7 @@ export class CatsController {
   }
 
   @Get()
-  async findAll(): Promise<Cat[]> {
+  async findAll(): Promise<ICat[]> {
     return this.catsService.findAll();
   }
 
