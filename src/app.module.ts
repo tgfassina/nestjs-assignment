@@ -3,6 +3,8 @@ import { CatsModule } from "./cats/cats.module";
 import { CoreModule } from "./core/core.module";
 import { Cat } from "./cats/cat.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { User } from "./users/user.entity";
+import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
@@ -13,11 +15,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       database: "cats_db",
       username: "cats_user",
       password: "cats_password",
-      entities: [Cat],
+      entities: [Cat, User],
       synchronize: true,
     }),
     CoreModule,
     CatsModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
