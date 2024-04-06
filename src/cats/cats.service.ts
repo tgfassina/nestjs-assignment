@@ -4,12 +4,15 @@ import { Cat } from "./cat.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateCatDto } from "./dto/create-cat.dto";
 import { UpdateCatDto } from "./dto/update-cat.dto";
+import { User } from "src/users/user.entity";
 
 @Injectable()
 export class CatsService {
   constructor(
     @InjectRepository(Cat)
     private catsRepository: Repository<Cat>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
   create(payload: CreateCatDto) {
@@ -36,5 +39,16 @@ export class CatsService {
     return this.catsRepository
       .delete({ uuid })
       .then((result) => result.affected > 0);
+  }
+
+  async addFavorite(uuid: string, userUuid: string): Promise<boolean> {
+    const cat = await this.catsRepository.findOneBy({ uuid });
+    const user = await this.usersRepository.findOne({
+      where: { uuid: userUuid },
+      relations: ["favoriteCats"],
+    });
+    user.favoriteCats.push(cat);
+    await this.usersRepository.save(user);
+    return true;
   }
 }

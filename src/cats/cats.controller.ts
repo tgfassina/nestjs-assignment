@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Request,
   UseGuards,
 } from "@nestjs/common";
 import { CatsService } from "./cats.service";
@@ -15,6 +16,7 @@ import { IsAdminGuard } from "src/auth/guards/is-admin.guard";
 import { Cat } from "./cat.entity";
 import { CreateCatDto } from "./dto/create-cat.dto";
 import { UpdateCatDto } from "./dto/update-cat.dto";
+import { ISessionUser } from "src/auth/interfaces/session-user.interface";
 
 @UseGuards(JwtAuthGuard)
 @Controller("cats")
@@ -53,5 +55,13 @@ export class CatsController {
   @Delete(":uuid")
   delete(@Param("uuid", ParseUUIDPipe) uuid: string): Promise<boolean> {
     return this.catsService.delete(uuid);
+  }
+
+  @Post("add-favorite/:uuid")
+  addFavorite(
+    @Param("uuid", ParseUUIDPipe) uuid: string,
+    @Request() req: { user: ISessionUser },
+  ) {
+    return this.catsService.addFavorite(uuid, req.user.uuid);
   }
 }
