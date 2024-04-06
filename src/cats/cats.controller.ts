@@ -64,4 +64,12 @@ export class CatsController {
   ) {
     return this.catsService.addFavorite(uuid, req.user.uuid);
   }
+
+  @Post("remove-favorite/:uuid")
+  removeFavorite(
+    @Param("uuid", ParseUUIDPipe) uuid: string,
+    @Request() req: { user: ISessionUser },
+  ) {
+    return this.catsService.removeFavorite(uuid, req.user.uuid);
+  }
 }

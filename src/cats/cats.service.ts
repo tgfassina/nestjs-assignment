@@ -51,4 +51,14 @@ export class CatsService {
     await this.usersRepository.save(user);
     return true;
   }
+
+  async removeFavorite(uuid: string, userUuid: string): Promise<boolean> {
+    const user = await this.usersRepository.findOne({
+      where: { uuid: userUuid },
+      relations: ["favoriteCats"],
+    });
+    user.favoriteCats = user.favoriteCats.filter((cat) => cat.uuid !== uuid);
+    await this.usersRepository.save(user);
+    return true;
+  }
 }
