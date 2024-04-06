@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -35,5 +36,13 @@ export class CatsController {
     uuid: string,
   ): Promise<Cat> {
     return this.catsService.findByUuid(uuid);
+  }
+
+  @UseGuards(IsAdminGuard)
+  @Delete(":uuid")
+  async delete(
+    @Param("uuid", new ParseUUIDPipe()) uuid: string,
+  ): Promise<boolean> {
+    return this.catsService.delete(uuid);
   }
 }

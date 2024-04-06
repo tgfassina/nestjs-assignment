@@ -23,4 +23,10 @@ export class CatsService {
   findByUuid(uuid: string): Promise<Cat> {
     return this.catsRepository.findOneBy({ uuid });
   }
+
+  async delete(uuid: string): Promise<boolean> {
+    return this.catsRepository
+      .delete({ uuid })
+      .then((result) => result.affected > 0);
+  }
 }
